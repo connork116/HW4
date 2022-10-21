@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Quiz App</title>
+    <title>Flash Card App</title>
     <style>
         *,
         *::before,
@@ -46,6 +46,16 @@
             background-color: white;
             border-radius: 5px;
             padding: 10px;
+            box-shadow: 0 0 10px 2px;
+        }
+
+        .configure {
+            width: 500px;
+            height: 100px;
+            max-width: 80%;
+            background-color: beige;
+            border-radius: 10px;
+            padding: 12px;
             box-shadow: 0 0 10px 2px;
         }
 
@@ -104,6 +114,8 @@
         function domLoaded() {
             const startButton = document.getElementById('start-btn')
             const nextButton = document.getElementById('next-btn')
+            const backButton = document.getElementById('back-btn')
+            const info = document.getElementById('info')
             const questionContainerElement = document.getElementById('question-container')
             const questionElement = document.getElementById('question')
             const answerButtonsElement = document.getElementById('answer-buttons')
@@ -117,9 +129,24 @@
                 setNextQuestion()
             })
 
+            backButton.addEventListener('click', () => {
+                currentQuestionIndex = currentQuestionIndex - 1
+                setPreviousQuestion()
+            })
+
+
             function startGame() {
                 startButton.classList.add('hide')
-                shuffledQuestions = questions.sort(() => Math.random() - .5)
+
+                if (document.getElementById("shuffle").checked) {
+                    shuffle()
+                }
+                if (document.getElementById("timed").checked) {
+                    timer()
+                }
+                if (document.getElementById("remove")) {
+                    removeQuestion()
+                }
                 currentQuestionIndex = 0
                 questionContainerElement.classList.remove('hide')
                 setNextQuestion()
@@ -129,6 +156,12 @@
                 resetState()
                 showQuestion(shuffledQuestions[currentQuestionIndex])
             }
+
+            function setPreviousQuestion() {
+                resetState()
+                showQuestion(shuffledQuestions[currentQuestionIndex - 1])
+            }
+
 
             function showQuestion(question) {
                 questionElement.innerText = question.question
@@ -164,6 +197,7 @@
                 } else {
                     startButton.innerText = 'Restart'
                     startButton.classList.remove('hide')
+                    info.classList.remove('hide')
                 }
             }
 
@@ -181,33 +215,136 @@
                 element.classList.remove('wrong')
             }
 
-            const questions = [
+            function restart() {
+                showQuestion(questions.question[0])
+            }
+
+            function shuffle() {
+                shuffledQuestions = questions.sort(() => Math.random() - .5)
+            }
+
+            function timer() {
+                const display = document.getElementById("timer")
+                let time = 60;
+                const min = Math.floor(time / 60)
+                let sec = time * min
+                display.innerHTML = min + ":" + sec
+            }
+
+            function removeQuestion() {
+                questions[currentQuestionIndex].pop()
+            }
+
+            questions = [
                 {
-                    question: 'This is a test question',
+                    question: 'How many WCC Championships has the Gonzaga basketball team won?',
                     answers: [
-                        { text: 'Correct Answer', correct: true },
-                        { text: 'Incorrect Answer', correct: false },
+                        { text: '20', correct: true },
+                        { text: '12', correct: false },
+                        { text: '16', correct: false },
+                        { text: '21', correct: false },
                     ]
                 },
                 {
-                    question: 'This is another test question',
+                    question: 'Does Gonzaga have a football team?',
                     answers: [
-                        { text: 'Correct Answer', correct: true },
-                        { text: 'Incorrect Answer', correct: false },
-                        { text: 'Incorrect Answer', correct: false },
-                        { text: 'Incorrect Answer', correct: false },
-                        { text: 'Incorrect Answer', correct: false },
-                        { text: 'Incorrect Answer', correct: false },
+                        { text: 'No', correct: true },
+                        { text: 'Yes', correct: false },
                     ]
                 },
-                
+                {
+                    question: 'What year was Gonzaga founded?',
+                    answers: [
+                        { text: '1887', correct: true },
+                        { text: '1880', correct: false },
+                        { text: '1902', correct: false },
+                        { text: '1877', correct: false },
+                    ]
+                },
+                {
+                    question: 'Which musical artist attened Gonzaga?',
+                    answers: [
+                        { text: 'Bob Marley', correct: false },
+                        { text: 'Bing Crosby', correct: true },
+                        { text: 'Frank Sinatra', correct: false },
+                        { text: 'Dean Martin', correct: false },
+                    ]
+                },
+                {
+                    question: 'What is the Gonzaga mascot?',
+                    answers: [
+                        { text: 'Titans', correct: false },
+                        { text: 'Wildcats', correct: false },
+                        { text: 'Cougars', correct: false },
+                        { text: 'Bulldogs', correct: true },
+                    ]
+                },
+                {
+                    question: 'Which University is considered the main rival of Gonzaga?',
+                    answers: [
+                        { text: 'University of Portland', correct: false },
+                        { text: 'Santa Clara University', correct: false },
+                        { text: "'St. Mary's college", correct: false },
+                        { text: 'Loyola Marymount University', correct: false },
+                    ]
+                },
+                {
+                    question: 'What is the nickname of the McCarthy Athletic Center?',
+                    answers: [
+                        { text: 'The House', correct: false },
+                        { text: 'The Kennel', correct: true },
+                        { text: 'The Dog Kennel', correct: false },
+                        { text: 'The Dog House', correct: false },
+                    ]
+                },
+                {
+                    question: "What is the business building on Gonzaga's campus?",
+                    answers: [
+                        { text: 'McCarthy', correct: false },
+                        { text: 'Bollier', correct: false },
+                        { text: 'College Hall', correct: false },
+                        { text: 'Jepson', correct: true },
+                    ]
+                },
+                {
+                    question: 'Is Gonzaga a Jesuit University?',
+                    answers: [
+                        { text: 'Yes', correct: true },
+                        { text: 'No', correct: false },
+                    ]
+                },
+                {
+                    question: 'Where is Gonzaga University located?',
+                    answers: [
+                        { text: 'Spokane, WA', correct: true },
+                        { text: 'Seattle, WA', correct: false },
+                        { text: 'Ballingham, WA', correct: false },
+                        { text: 'Bellevue, WA', correct: false },
+                    ]
+                },
             ]
         }
     </script>
 </head>
 
 <body>
+    <div class="configure">
+        <b>Configuration</b>
+        <br>
+        <input type="checkbox" id="shuffle" name="shuffle" value="Yes">
+        <label for="shuffle">Shuffle Cards</label>
+        <br>
+        <input type="checkbox" id="timed" name="timed" value="Yes">
+        <label for="timed">Timed Session</label>
+        <br>
+        <input type="checkbox" id="remove" name="remove" value="Yes">
+        <label for="remove">Remove Correct from Deck</label>
+        <br>
+    </div>
     <div class="container">
+        <div id="info" class="hide">
+            This is additional information abour your quiz response
+        </div>
         <div id="question-container" class="hide">
             <div id="question">Question</div>
             <div id="answer-buttons" class="btn-grid">
@@ -220,6 +357,10 @@
         <div class="controls">
             <button id="start-btn" class="start-btn btn">Start</button>
             <button id="next-btn" class="next-btn btn hide">Next</button>
+            <button id="back-btn" class="back-btn btn hide">Back</button>
+        </div>
+        <div id="timer" class="hide">
+
         </div>
     </div>
 </body>
